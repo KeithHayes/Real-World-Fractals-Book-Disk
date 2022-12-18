@@ -1,0 +1,10 @@
+Night.exe generates a night time scene using the 2D tree 
+classes RWFaf_TreeObject and RWFaf_PolyTree.  The moon is modeled 
+using the RWFtree_CraterObject class.  There is one basic type 
+of tree and then several variety of plants, with all of the 
+branching parameters chosen randomly.  This program is very 
+similar to plate8.exe, which renders a similar scene in the 
+daytime.
+
+
+

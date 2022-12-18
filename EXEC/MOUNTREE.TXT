@@ -1,0 +1,11 @@
+This program uses the same terrain as mountain.exe.  The 
+terrain model is completed by drawing clouds in the background, 
+followed by the terrain and finally by populating the terrain 
+with trees.  To demonstrate the consistency of each recursion 
+level, the terrain is drawn first with no fBM model applied, 
+and then overlaid with successive recursion levels.  The trees 
+are simple pine tree models.  Rendering the complete scene can 
+take a while (up to 30 minutes), so be patient!
+
+
+

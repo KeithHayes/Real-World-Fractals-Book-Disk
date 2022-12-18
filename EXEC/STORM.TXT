@@ -1,0 +1,9 @@
+Storm.exe illustrates the cloud object class RWFaf_3DCraterObject.  You 
+may select the number of clouds to draw in a scene.  After the clouds are 
+drawn, simulated lightning flashes between the clouds using 1D fBM to 
+create a jagged lightning bolt.  The fBM data specifies how to offset the 
+bolt relative to a straight line drawn between 2 cloud centers.  The 
+lightning "flash" is created by ramping the color palette after the 
+lightning bolt is drawn.
+
+

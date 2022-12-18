@@ -1,0 +1,365 @@
+
+This file contains notes about changes to the libraries and programs for 
+REAL WORLD FRACTALS that were not included at the time of publication.
+
+**********************************
+* DEMONSTRATION PROGRAM FEATURES *
+**********************************
+
+All of the demonstration programs are designed to accept command-line 
+arguments to specify parameters for the program.  You can find out the 
+various command-line options for the program by typing:
+
+<demo> -?
+
+where <demo> is the name of any of the programs.  An example command-line 
+driven program is icompres.exe, the fractal compression demonstration.  
+You can compress a particular PCX file using a DOS command line such as:
+
+icompres bobcat.pcx -quad -error 10.0
+
+In general, the order of the arguments is unimportant.
+
+Interrupting the Programs
+-------------------------
+
+Since many of the programs can take a considerable amount of time to 
+execute, an option has been added that lets you press ESCAPE or CTRL-C at 
+any time to interrupt the program.  Once you press ESCAPE, the program 
+will display a message at the bottom of the screen.  You can continue the 
+program simply by pressing any key, or press ESCAPE again to exit the 
+program.
+
+Setting the Display Resolution
+------------------------------
+
+The graphics display drivers can support most display modes of SVGA cards,
+from 320 x 200 (256 colors) all the way up to 1280 x 1024.  The default
+setting is for 800 x 600 resolution.  You can override this mode by setting
+the DOS environment variable RWF_DISPLAY with the command:
+
+	C:> SET RWF_DISPLAY=3
+
+The batch file SETMODE.BAT is included in EXEC.ZIP to automatically set
+this variable for you.  Simply type SETMODE at the DOS prompt and the
+list of possible settings will be displayed.  Or you may enter 
+SETMODE #, where # is one of the following 7 settings:
+
+	(All modes use 256 colors)
+
+	0 - 320 x 200
+	1 - 640 x 400
+	2 - 640 x 480
+	3 - 800 x 600
+	4 - 1024 x 768
+	5 - 640  x 350
+	6 - 1280 x 1024
+
+If RWF_DISPLAY is not set, the programs default to 800 x 600 mode.  
+On some programs such as JULIA.EXE, you may find it useful to use a 
+lower resolution mode to speed up the computations.  You may put this
+command in your AUTOEXEC.BAT file if you like to make the setting
+permanent.
+
+Bonus Demos!
+------------
+
+  The program PLATE8.exe generates plate 8 from the book.  This program 
+was created before all of the 3D functions were implemented, so the trees 
+use the 2D tree model instead of the 3D version.  The simulated forest is 
+created by drawing the trees from back to front, with random selections
+of branching patterns.  After each scene is completed, you may press
+ESCAPE to exit or any other key to generate a new forest.
+
+  The program GASKET3D.EXE operates exactly the same as GASKETS.EXE 
+except GASKET3D demonstrates the 3D gasket objects, Menger sponges, and 
+other interesting combinations.
+
+  The program CHAOS.EXE generates some of the figures from Chapter 13.
+You can use this program as an example for studying your own chaotic
+systems.
+
+Graphics Modes
+--------------
+
+  We are most grateful for the SVGA BGI drivers included with 
+the software.  The drivers are all courtesy of:
+
+	Jordan Hargrave
+	11701 Metric Blvd, Apt #1726
+	Austin, TX 78758
+	(512) 834-8164 voice
+	(512) 834-8499 data/fax
+
+  We have only provided the version to support 256-color modes 
+of most SVGA cards.  All of the software has been tested using 
+an 800x600x256 display mode on the ATI Graphics Ultra Pro.  The 
+graphics initialization routine will try to initialize your 
+card to the 800 x 600 display mode.  If the initialization 
+fails, the routine will then try lower resolution modes until 
+finding one that succeeds.  You can get the complete set of BGI 
+drivers from Mr. Hargrave in the Borland C++ support forum on 
+Compuserve.
+  You must have the file SVGA256.BGI in the directory you run the demo 
+programs from, or in your BORLANDC\BGI directory.
+  If you have trouble getting the delivered executables to run, try
+running the program WHICHVGA.EXE included in the EXEC.ZIP archive.
+This will tell you if the supplied BGI drivers will work in the 
+800x600x256 color mode for your display card.  If this mode is not
+supported, you will have to modify the initialize() routine in 
+rwfgraph.cpp to use a 256-color BGI driver for your graphics card and
+then remake the executables using the Makefile.
+
+Project Files
+-------------
+
+  All of the included BorlandC project files (.prj files) and the 
+makefile have been set up with the default BORLANDC directories on the D: 
+drive.  If you have a different setup, such as Borland C++ installed on 
+drive C:, you must use the Directories option under the Options Menu to 
+indicate where the library and include directories are on your system.  
+If you build the executables using the Makefile, you must also edit the 
+two lines in the Makefile which define where the library and include 
+files can be found:
+
+# Set your library and include directories here
+LIB_DIR = d:\borlandc\lib
+INC_DIR = d:\borlandc\include
+
+***********************
+*  Library Additions  *
+***********************
+
+A considerable amount of tweaking has been performed on the 
+basic libraries to improve their overall consistency and 
+efficiency.  The new additions to the library are:
+
+RWFMISC.CPP
+-----------
+
+RWFMISC.CPP contains several utility functions you will see in the 
+libraries:
+
+void rwf_miscTitle(char *, int) 
+  Displays a title block for a program.
+
+int rwf_miscPressAnyKey()   
+  Pauses the program, prints a message at the bottom of the 
+screen (in graphics mode) and waits for the user to either 
+press a key to continue or press ESCAPE or CTRL-C to exit the 
+program immediately.  The value of the pressed key is returned.
+
+int rwf_miscPressAnyKey(char *)
+  Same as rwf_miscPressAnyKey() except displays the passed string instead 
+of the standard interrupt string.
+
+int rwf_miscPressAnyKey(char *, int)
+  Same as above function.  If the second argument is 0, then ESCAPE will 
+not terminate the program.
+
+int rwf_miscCheckEscape()
+  Checks to see if the user has pressed ESCAPE or CTRL-C.  This 
+function is placed at strategic points in the libraries to let 
+the user interrupt a lengthy calculation.
+
+RWFmisc_Boolean rwf_miscCheckBreak()
+  Returns true if the user enters ESCAPE or CTRL-C.  This lets you 
+gracefully exit from a routine instead of exiting the program entirely.
+
+Palette Functions
+-----------------
+
+  The only palette manipulation function in the text is 
+RWFgraph_SetPaletteIndex().  To make using the palette a little easier, 
+we have added the following classes and functions:
+
+RWFgraph_Color
+  Simply stored the red, green, and blue for a palette entry.  
+The following member functions let you access these elements:
+
+  setRGB(int red, int green, int blue) 
+    Sets the RGB components
+
+  getRGB(int &red, int &green, int &blue) 
+    Retrieves the RGB components
+
+All palette values and colors are in the range 0 - 255.
+
+RWFgraph_Palette
+  This class is a table of RWFgraph_Color entries.  It is 
+defined as follows:
+
+  typedef RWFlist_SimpleTable<RWFgraph_Color> RWFgraph_Palette;
+
+As with any other table class, you may create a palette of any 
+desired size, although the display can only handle 256 
+elements.  You access individual entries using the subscript 
+operator.  Thus palette[i] is a RWFgraph_Color reference, and 
+palette[i].getRGB(red, green, blue) will retrieve the current 
+colors for the ith entry of the palette.
+
+void rwf_graphSetPalette(int start_index, RWFgraph_Palette &pal)
+  This function sets the display palette using the passed 
+palette table, starting at index start_index.
+
+void rwf_graphGetPalette(int start_index, RWFgraph_Palette &pal)
+  This function retrieves the current palette starting at 
+start_index.  Only the portion of the palette up to pal.size() 
+is retrieved.  For example, you can retrieve the entire palette 
+using the following sequence:
+
+	RWFgraph_Palette pal(256);
+
+	rwf_graphInitialize(0);
+	rwf_graphGetPalette(0, pal);
+
+The following functions are used by the demonstration programs 
+to set the palette appropriately:
+
+void rwf_graphSetGrayScale(int max_gray)
+  This function sets the palette to a gray scale, where 
+max_gray is the gray_level you want to have the maximum 
+intensity of 255.  For instance, if your data has intensity 
+values from 0 to 63, you would use rwf_graphSetGrayScale(63) to 
+create a suitable gray scale display for your data.
+
+void rwf_graphSetColorScale(void)
+  This function is used to set up colors for the 3D rendering.  
+This function uses the first 16 entries of the palette as a set 
+of base colors for objects.  The palette is then divided up, 
+with 16 entries allocated for each of the first 16 colors.  For 
+instance, color 1 uses entries 16-31, color 2 uses 32-47, and 
+so forth.  Each 16 element palette segment is then scaled from 
+black to the maximum color in 16 steps.  Whenever a 3D polygon 
+is rendered, its displayed intensity is computed as a value 
+from 0 - 255.  This intensity is then divided by 4 to create an 
+index from 0-15, which is in turn used to pick the appropriate 
+entry in the palette to display that color polygon with the 
+particular intensity.
+
+  The net effect of all this is that you set object colors 
+(using the setColor() member function) to a palette entry from 
+0 to 15.  You then set the palette entry (using 
+rwf_graphSetPaletteIndex()) to the (red, green, blue) color you 
+want for that polygon (you may, of course, not set any of the 
+colors in which case the default EGA color set is used).  Once 
+all of the palette entries are set, you then call 
+rwf_graphSetColorScale() to set things up for 3D rendering.  
+You can see examples of this in the demonstration files 
+mountain.cpp, mountree.cpp, and storm.cpp.
+
+Library Changes
+---------------
+
+Two-Dimensional Graphics
+------------------------
+
+We decided to generalize the two-dimensional graphics functions a bit to 
+provide considerably more flexibility in creating drawing programs.  The 
+following functions apply to all two-dimensional objects:
+
+void rwf_graphSetWindow(float xll, float yll, float xur, float yur)
+
+  This function effectively sets the units of your screen to anything you 
+like.  By default, all 2D coordinates are specified in pixels.  However, 
+since almost all of the graphics objects are specified as unit-sized 
+objects, it is often more convenient to be able to set the scale of the 
+screen to match the object.  For instance, the following call sets the 
+screen to run from -1 to +1 in both directions:
+
+  rwf_graphSetWindow(-1.0, -1.0, 1.0, 1.0);
+
+Whenever you draw a 2D object, the coordinates will be scaled such that 
+(-1,-1) is in the lower-left hand corner of the screen, and (1,1) is in 
+the upper-right hand corner.  
+
+void rwf_graphSetScreenWindow(int xul, int yul, int xlr, int ylr)
+
+  This function sets the area of the screen you wish to draw to.  The 
+area is specified by the upper-left and lower-right coordinates of the 
+screen.  This can be useful for putting multiple smaller plots on the 
+screen.
+
+  The following functions are equivalent to their BGI counterparts.  They 
+are passed float coordinates that are scaled to match the current window 
+setup:
+
+void rwf_graphLineDraw(float,float,float,float) - Draw a line
+void rwf_graphPointDraw(float,float,int)        - Draw a point
+void rwf_graphCircleDraw(float,float,float)     - Draw a circle
+void rwf_graphCircleFill(float,float,float)     - Draw a filled circle
+void rwf_graphBarDraw(float,float,float,float)  - Draw a filled rectangle
+
+
+RWFgraph_Object
+---------------
+
+  The main graphics object class is derived directly from the 
+RWFmat_Matrix class.  A graphics object can therefore be manipulated in 
+exactly the same way as a matrix, including using all of the matrix 
+member functions such as translate(), scale(), rotate(), etc.  The member 
+functions getMatrix() and setMatrix(RWFmat_Matrix &) provide a clean way 
+of accessing just the matrix portion of an RWFgraph_Object object.
+  In Chapter 5, references are made to the base_matrix of a graphics 
+object.  Since RWFgraph_Object is derived from RWFmat_Matrix, keeping a 
+separate base_matrix around is unnecessary.  All references to 
+base_matrix in an RWFgraph_Object object should be replaced with the 
+member function getMatrix().
+
+RWFgraph_Point
+--------------
+
+  This is no longer a true graphics class, that is, it is not derived 
+from RWFgraph_Object.  It is, however, derived from the RWFvec_Vector
+class. You can manipulate and use an RWFgraph_Point just like a vector, 
+including using the subscript operator [] to access individual elements. 
+RWFgraph_Point is the basic class used to store points for objects such 
+as RWFgraph_Polygon and RWFgraph_Polyline, and all of the member 
+functions such as setCoord() and getCoord() are available.
+
+RWFgraph_ObjectList
+-------------------
+
+  When you use setColor() on an object list, the color you specify is 
+effectively added to the color of the individual objects in the list 
+whenever the object list is drawn.  By default, an object list has a 
+color of 0, so that each of the objects is drawn with its original color.
+
+RWFaf_Object & RWFaf_3DObject
+-----------------------------
+
+	setColor() sets the color of the initiator and erase initiator (if any)
+to the specified color.
+
+	A version of setInitiator() and setEraseInitiator() are provided that
+take a pointer to a single RWFgraph_Object object.  This eliminates the
+need to create an RWFlist_ObjectPtrTable to pass the address of a single
+object.
+
+RWFgraph_ViewingGeometry
+------------------------
+
+  The following member function was added to simplify finding 
+projected coordinates:
+
+  void projectCoords(RWFvec_Vector &v, int &xscreen, 
+				       int &yscreen);
+
+This function takes the vector v and returns the 
+(xscreen,yscreen) pixel coordinate where the point projects to.
+
+  The member function computeIntensity() now returns an int from 0 to 255.
+
+RWFvk_Object
+------------
+
+  This object is derived directly from RWFaf_Object.  The 
+RWFvk_BasicObject class is not provided as RWFvk_Object can do everything it 
+can and is considerably more general purpose.
+
+RWFgraph_LineSegment
+-----------------
+
+  RWFgraph_LineSegment and RWFgraph_Line are defined as the same class.
+
+

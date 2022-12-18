@@ -1,0 +1,47 @@
+
+
+all: NIGHT.EXE MOUNTAIN.EXE ICOMPRES.EXE \
+     STORM.exe MOUNTREE.exe CHAOS.exe PACHINKO.exe  \
+     VONKOCH.exe GASKETS.exe GASKET3D.exe JULIA.exe FBMDEMO.exe \
+     PLATE4.exe PLATE8.exe
+
+# Set your library and include directories here
+LIB_DIR = d:\borlandc\lib
+INC_DIR = d:\borlandc\include
+
+CFLAGS = -ml -2 -G -O2 -ff -V -vi- -w-par -w-use -w-rch -w-aus -I$(INC_DIR) -c
+CC = bcc
+LINK = tlink /L$(LIB_DIR)
+
+COMMON_OBJ = \
+      RWFGRAPH.obj RWFMAT.obj   RWFMISC.obj  RWF3D.obj   \
+      RWFRAND.obj  RWFVK.obj    RWFAF.obj    RWFSG.obj   \
+      RWFTREE.obj  RWFJULIA.obj RWFFBM.obj   RWFGRID.obj \
+      RWFIMAGE.obj RWFCHAOS.obj 
+
+pachinko.exe : $(COMMON_OBJ)
+vonkoch.exe  : $(COMMON_OBJ)
+gaskets.exe  : $(COMMON_OBJ)
+gasket3d.exe : $(COMMON_OBJ)
+chaos.exe    : $(COMMON_OBJ)
+night.exe    : $(COMMON_OBJ)
+julia.exe    : $(COMMON_OBJ)
+fbmdemo.exe  : $(COMMON_OBJ)
+storm.exe    : $(COMMON_OBJ)
+mountain.exe : $(COMMON_OBJ)
+mountree.exe : $(COMMON_OBJ)
+icompres.exe : $(COMMON_OBJ)
+plate1.exe   : $(COMMON_OBJ)
+plate2.exe   : $(COMMON_OBJ)
+plate3.exe   : $(COMMON_OBJ)
+plate4.exe   : $(COMMON_OBJ)
+plate8.exe   : $(COMMON_OBJ)
+
+.obj.exe:
+	$(LINK) c0L $*.obj @links $*.exe, , graphics emu mathl cl
+
+.c.obj:
+    $(CC) $(CFLAGS) $*.c
+.cpp.obj:
+    $(CC) $(CFLAGS) $*.cpp
+

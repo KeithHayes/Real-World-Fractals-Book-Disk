@@ -1,0 +1,18 @@
+This program demonstrates fractal image compression as described in 
+Chapter 12.  ICompres reads in a PCX format image file as a black & white 
+image, encodes the image, and then decodes the image. You may use the 
+command line switches -quad to use the quadtree encoding technique, or 
+-8x8 for the fixed 8x8 block encoding.  Use icompres -? for help on the 
+other options.
+  The image is processed in 128 x 128 pixel blocks.  The original image 
+is shown in the bottom half of the screen.  As each 128x128 pixel block 
+is encoded, it is shown in the upper left-hand corner.  The encoding 
+process then proceeds to match each sub-block of the original image with 
+a larger pixel block within the image. The matching process is shown to 
+the right of the block being processed. When the scan is complete, the 
+block is decoded using 15 passes starting with an image of a 
+checkerboard.  The decoded block overwrites the original image block on 
+the bottom of the screen.  The original image block is then displayed on 
+the bottom right of the screen for comparison of the results.
+
+

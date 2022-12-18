@@ -1,0 +1,18 @@
+  This program lets you interactively explore the Julia and Mandelbrot 
+sets for the system z -> z**power + c.  After the first plot is 
+displayed, you may use the arrow keys to move around the set and zoom in 
+on selected portions.  The following command keys are also available (and 
+are case sensitive):
+
+	+ - Zoom up by 2                - - Zoom out by 2
+	z - Enter a new zoom factor     m - set Maximum recursion level
+	p - Enter new exponent and complex offset
+	c - Cycle the palette colors
+	r - Randomly wander around the displayed set
+	J - Display Julia set           M - Display Mandelbrot set
+	q - Quit
+
+You may use the ESCAPE key to interrupt any particular display and enter 
+a new command.
+
+

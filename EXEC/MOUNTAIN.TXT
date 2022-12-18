@@ -1,0 +1,8 @@
+This program illustrates the terrain rendering technique on a 
+32 x 32 terrain model of a hill.  There are 4 classes for the 
+hill, divided according to height.  The program shows 4 
+different recursion levels on a single screen, and then 
+generates the final recursion level (which can take a while so 
+be patient) in the final screen.
+
+
